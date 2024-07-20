@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { CopyIcon } from './Icons/CopyIcon';
+import { ShareIcon } from './Icons/ShareIcon';
 
 /**
  * EndGameModal component displays the end game modal with score, high score, and options to play again or share results.
@@ -45,25 +46,30 @@ const EndGameModal = ({ isOpen, onClose, score, highScore, onPlayAgain, emojisDi
   const disPlayContent = generateShareableandDisplayContent(true);
 
   /**
-   * Copies the shareable content to the clipboard.
-   */
-  const copyToClipboard = () => {
-    try {
-      navigator.clipboard.writeText(shareableContent).then(() => {
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      });
-    } catch (error) {
-      console.error('Failed to copy: ', error);
-    }
-  };
-
-  /**
    * Shares the shareable content to Twitter.
    */
   const shareToTwitter = () => {
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareableContent)}`;
     window.open(twitterUrl, '_blank');
+  };
+
+  /**
+   * Shares the shareable content to social media.
+   */
+  const shareToSocial = () => {
+    try {
+      const shareData = {
+        text: shareableContent,
+        url: 'https://memorygame.chandrxn.me',
+      };
+      if (navigator.share && navigator.canShare(shareData)) {
+        navigator.share(shareData);
+      } else {
+        shareToTwitter();
+      }
+    } catch (error) {
+      console.error('Failed to share: ', error);
+    }
   };
 
   return (
@@ -77,17 +83,6 @@ const EndGameModal = ({ isOpen, onClose, score, highScore, onPlayAgain, emojisDi
         <div className="bg-gray-100 rounded-xl p-4 mb-4">
           <pre className="whitespace-pre-wrap text-gray-600 flex flex-row justify-between items-end">
             <span className="text-gray-600 text-sm">{disPlayContent}</span>
-            <div className="relative group">
-              <button
-                className="bg-gray-200 rounded-md p-1.5 hover:bg-gray-300 transition-colors"
-                onClick={copyToClipboard}
-              >
-                <CopyIcon />
-              </button>
-              <span className="absolute  bottom-full left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-[10px] rounded py-1 px-2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                {copied ? 'Copied!' : 'Copy'}
-              </span>
-            </div>
           </pre>
         </div>
         <div className="flex space-x-2">
@@ -99,10 +94,13 @@ const EndGameModal = ({ isOpen, onClose, score, highScore, onPlayAgain, emojisDi
           </button>
           {emojisDiscovered?.size > 0 && (
             <button
-              onClick={shareToTwitter}
+              onClick={shareToSocial}
               className="bg-black text-white px-4 py-2 text-sm rounded-md hover:opacity-90 transition-opacity flex-1 "
             >
-              Share on X
+              <span className="flex gap-1 items-center justify-center">
+                <ShareIcon className="w-6 h-6" />
+                Share
+              </span>
             </button>
           )}
         </div>
