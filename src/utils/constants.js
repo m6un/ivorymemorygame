@@ -23,7 +23,6 @@ export const CARD_ELEMENTS = [
   '🫘',
   '🌰',
   '🫛',
-  '🍄‍🟫',
   '🫓',
   '🧀',
   '🍖',
@@ -83,4 +82,4 @@ export const CARD_FLIP_TIMEOUT_MS = 750;
  * @constant {number} GAME_DURATION_MS
  * The total duration of the game in milliseconds.
  */
-export const GAME_DURATION_MS = 2000;
+export const GAME_DURATION_MS = 60000;

@@ -15,21 +15,21 @@ const MemoryGame = lazy(() => import('./Pages/MemoryGame'));
  * @returns {JSX.Element} The rendered App component
  */
 function App() {
-  // State to control the visibility of the loader
   const [showLoader, setShowLoader] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    // Set a timer to show the loader if content hasn't loaded within 500ms
+    if (isLoaded) return;
+
     const timer = setTimeout(() => {
       setShowLoader(true);
     }, 500);
 
-    // Cleanup function to clear the timer
     return () => clearTimeout(timer);
-  }, []);
+  }, [isLoaded]);
 
   return (
-    <Suspense fallback={showLoader ? <Loader /> : null}>
+    <Suspense fallback={showLoader ? <Loader /> : null} onLoad={() => setIsLoaded(true)}>
       <MemoryGame />
     </Suspense>
   );
