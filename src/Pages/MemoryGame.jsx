@@ -21,6 +21,7 @@ import {
 import { PlusIcon } from '../components/Icons/PlusIcon';
 import Card from '../components/Card';
 import SoundManager from '../utils/SoundManager';
+import useWakeLock from '../hooks/useWakeLock';
 
 const MemoryGame = () => {
   // State variables
@@ -40,6 +41,8 @@ const MemoryGame = () => {
   const [discoveredEmojis, setDiscoveredEmojis] = useState(new Set());
   const [isMuted, setIsMuted] = useState(false);
 
+  const { requestWakeLock, releaseWakeLock } = useWakeLock();
+
   /**
    * Generates an array of paired cards for the game
    * @param {Array} arr - Array of possible card values
@@ -52,6 +55,15 @@ const MemoryGame = () => {
     const pairs = selectedItems.flatMap(item => [item, item]);
     return pairs.sort(() => Math.random() - 0.5);
   }, []);
+
+  /**
+   * Calculates the final score including time bonus
+   * @returns {number} Final score
+   */
+  const calculateScore = useCallback(() => {
+    const timeBonus = timeLeft * TIME_BONUS_FACTOR;
+    return score + timeBonus;
+  }, [timeLeft, score]);
 
   /**
    * Starts a new game
@@ -73,20 +85,13 @@ const MemoryGame = () => {
     setShowModal(false);
     setDiscoveredEmojis(new Set());
 
+    requestWakeLock();
+
     setTimeout(() => {
       setShowAllCards(false);
       setIsGameActive(true);
     }, CARD_FLIP_TIMEOUT_MS);
-  }, [generateArrayWithPairs]);
-
-  /**
-   * Calculates the final score including time bonus
-   * @returns {number} Final score
-   */
-  const calculateScore = useCallback(() => {
-    const timeBonus = timeLeft * TIME_BONUS_FACTOR;
-    return score + timeBonus;
-  }, [timeLeft, score]);
+  }, [generateArrayWithPairs, requestWakeLock]);
 
   /**
    * Ends the current game
@@ -104,7 +109,8 @@ const MemoryGame = () => {
       SoundManager?.playRetry();
     }
     setShowModal(true);
-  }, [calculateScore, highScore, discoveredEmojis]);
+    releaseWakeLock();
+  }, [calculateScore, highScore, discoveredEmojis, releaseWakeLock]);
 
   // Timer effect
   useEffect(() => {
