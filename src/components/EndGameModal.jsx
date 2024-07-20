@@ -38,7 +38,7 @@ const EndGameModal = ({ isOpen, onClose, score, highScore, onPlayAgain, emojisDi
       ? emojis.length !== 0
         ? `You found the following emojis:\n${emojis.join(' ')}`
         : `You found no emojis 😔`
-      : `I found the following emojis: \n${emojis.join(' ')}\n\nPlay now: [Your Game URL]`;
+      : `I found the following emojis: \n${emojis.join(' ')}\n\nPlay now: https://memorygame.chandrxn.me`;
   };
 
   const shareableContent = generateShareableandDisplayContent();
