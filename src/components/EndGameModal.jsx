@@ -62,7 +62,6 @@ const EndGameModal = ({ isOpen, onClose, score, highScore, onPlayAgain, emojisDi
     const shareData = {
       title: 'Emoji Memory Game',
       text: shareableContent,
-      url: 'https://memorygame.chandrxn.me',
     };
 
     try {
