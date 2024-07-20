@@ -133,6 +133,8 @@ const MemoryGame = () => {
     SoundManager.toggleMute();
   }, []);
 
+  console.log({ timeLeft });
+
   /**
    * Handles card click events
    * @param {number} index - Index of the clicked card
@@ -152,6 +154,7 @@ const MemoryGame = () => {
         if (newVisibleCards.length === 2) {
           const [firstIndex, secondIndex] = newVisibleCards;
           if (cards[firstIndex] === cards[secondIndex]) {
+            SoundManager?.playMatch();
             setMatchedCards(prev => [...prev, firstIndex, secondIndex]);
             setDiscoveredEmojis(prev => new Set(prev).add(cards[firstIndex]));
             const matchScore = MATCH_SCORE + consecutiveMatches * CONSECUTIVE_MATCH_BONUS;
@@ -234,7 +237,7 @@ const MemoryGame = () => {
     [showModal, score, highScore, startGame, discoveredEmojis]
   );
 
-  console.log({ cards });
+  console.log({ isGameActive });
 
   return (
     <div className="flex flex-col items-center bg-memory-pattern justify-center min-h-screen text-primary">
@@ -243,7 +246,7 @@ const MemoryGame = () => {
       </h1>
       <h2 className="text-sm mb-4 font-normal text-gray-600">Match the emojis</h2>
       <div
-        className={`grid grid-cols-4 gap-3 max-w-md mx-auto mt-4 ${cards.length === 0 ? 'mb-2' : 'mb-8'}`}
+        className={`grid grid-cols-4 gap-3 max-w-md mx-auto mt-4 ${cards?.length === 0 ? 'mb-2' : 'mb-8'}`}
       >
         {memoizedCards}
       </div>
@@ -263,16 +266,29 @@ const MemoryGame = () => {
           >
             {isMuted ? '🔇' : '🔊'}
           </button>
+          <button
+            onClick={startGame}
+            className="bg-black text-white w-12 h-12 rounded-full flex items-center justify-center text-xl hover:opacity-80 transition-opacity"
+          >
+            🔄
+          </button>
         </div>
-      ) : (
+      ) : cards?.length === 0 ? (
         <button
           className="bg-black text-white px-4 py-2 rounded-xl text-sm hover:opacity-80 transition-opacity"
           onClick={startGame}
         >
-          <span className="flex gap-2 items-center">
+          <span className="flex gap-1 items-center">
             <PlusIcon className="w-6 h-6" />
             New game
           </span>
+        </button>
+      ) : (
+        <button
+          onClick={startGame}
+          className="bg-black text-white w-12 h-12 rounded-full flex items-center justify-center text-xl hover:opacity-80 transition-opacity"
+        >
+          🔄
         </button>
       )}
       {memoizedModal}
