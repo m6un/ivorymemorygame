@@ -12,22 +12,21 @@ You can play the game online without any installation:
 
 ## 🌟 Key Features
 
-### Gameplay
-- 🃏 Card Matching: Find pairs among a grid of face-down cards
-- 🧠 Memory Challenge: Test and enhance cognitive skills
-- 🔀 Dynamic Card Layout: Randomized card placement for each game
-
 ### Technical Highlights
 - ⚛️ React.js Single Page Application (SPA)
 - 📱 Responsive design for all devices
 - 🚀 Performance-optimized for mobile
+- ✈️ Share functionality utilising native web and android platform capabilities
+- 🔓 WakeLock functionality so that screen won't sleep during gameplay.
 - 🔄 Efficient state management with React Hooks
+- ⛔️ Efficient error handling with dedicated ErrorBoundary component
 - 🎨 Sleek, intuitive user interface
 
 ### Enhanced Gameplay Elements
+- 📮Players can easily share their results on social media, showcasing their progress in a visually appealing way that’s sure to attract new players.
 - 🏆 Score Tracking: Monitor moves or time
--   Streak for getting cards correct on the trot
--   Score calculation by considering streak + time taken to complete
+- ⚡️ Streak for getting cards correct on the trot
+- 🎯 Score calculation by considering streak + time taken to complete
 - 🔊 Audio Feedback: Sound effects for actions (optional)
 
 ## 🛠️ Technical Stack
@@ -37,6 +36,11 @@ You can play the game online without any installation:
 - **State Management**: React Hooks (useState, useEffect)
 - **Build Tool**: Vite JS
 - **Native Conversion**: Capacitor
+
+### Gameplay
+- 🃏 Card Matching: Find pairs among a grid of face-down cards
+- 🧠 Memory Challenge: Test and enhance cognitive skills
+- 🔀 Dynamic Card Layout: Randomized card placement for each game
 
 ## 🚀 Getting Started
 
