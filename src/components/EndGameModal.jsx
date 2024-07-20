@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { CopyIcon } from './Icons/CopyIcon';
 import { ShareIcon } from './Icons/ShareIcon';
+import { Capacitor } from '@capacitor/core';
+import { Share } from '@capacitor/share';
 
 /**
  * EndGameModal component displays the end game modal with score, high score, and options to play again or share results.
@@ -56,15 +58,22 @@ const EndGameModal = ({ isOpen, onClose, score, highScore, onPlayAgain, emojisDi
   /**
    * Shares the shareable content to social media.
    */
-  const shareToSocial = () => {
+  const shareToSocial = async () => {
+    const shareData = {
+      title: 'Emoji Memory Game',
+      text: shareableContent,
+      url: 'https://memorygame.chandrxn.me',
+    };
+
     try {
-      const shareData = {
-        text: shareableContent,
-        url: 'https://memorygame.chandrxn.me',
-      };
-      if (navigator.share && navigator.canShare(shareData)) {
-        navigator.share(shareData);
+      if (Capacitor.isNativePlatform()) {
+        // Use Capacitor's Share plugin for native platforms
+        await Share.share(shareData);
+      } else if (navigator.share && navigator.canShare(shareData)) {
+        // Use Web Share API for supported browsers
+        await navigator.share(shareData);
       } else {
+        // Fallback to Twitter sharing for unsupported browsers
         shareToTwitter();
       }
     } catch (error) {
