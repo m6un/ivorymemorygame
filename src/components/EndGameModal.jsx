@@ -48,10 +48,14 @@ const EndGameModal = ({ isOpen, onClose, score, highScore, onPlayAgain, emojisDi
    * Copies the shareable content to the clipboard.
    */
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(shareableContent).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
+    try {
+      navigator.clipboard.writeText(shareableContent).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      });
+    } catch (error) {
+      console.error('Failed to copy: ', error);
+    }
   };
 
   /**

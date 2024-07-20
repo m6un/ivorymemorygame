@@ -5,6 +5,7 @@
 
 import { lazy, Suspense, useState, useEffect } from 'react';
 import Loader from './components/Loader';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // Lazy load the MemoryGame component for better performance
 const MemoryGame = lazy(() => import('./Pages/MemoryGame'));
@@ -29,8 +30,10 @@ function App() {
   }, [isLoaded]);
 
   return (
-    <Suspense fallback={showLoader ? <Loader /> : null} onLoad={() => setIsLoaded(true)}>
-      <MemoryGame />
+    <Suspense fallback={showLoader ? <Loader /> : null}>
+      <ErrorBoundary>
+        <MemoryGame onLoad={() => setIsLoaded(true)} />
+      </ErrorBoundary>
     </Suspense>
   );
 }

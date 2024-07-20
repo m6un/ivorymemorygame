@@ -137,39 +137,43 @@ const MemoryGame = () => {
       if (visibleCards.length === 2 || visibleCards.includes(index) || matchedCards.includes(index))
         return;
 
-      SoundManager?.playCardClick();
+      try {
+        SoundManager?.playCardClick();
 
-      const newVisibleCards = [...visibleCards, index];
-      setVisibleCards(newVisibleCards);
+        const newVisibleCards = [...visibleCards, index];
+        setVisibleCards(newVisibleCards);
 
-      if (newVisibleCards.length === 2) {
-        const [firstIndex, secondIndex] = newVisibleCards;
-        if (cards[firstIndex] === cards[secondIndex]) {
-          setMatchedCards([...matchedCards, firstIndex, secondIndex]);
-          setDiscoveredEmojis(prev => new Set(prev).add(cards[firstIndex]));
-          const matchScore = MATCH_SCORE + consecutiveMatches * CONSECUTIVE_MATCH_BONUS;
-          setScore(score + matchScore);
-          setConsecutiveMatches(consecutiveMatches + 1);
-          setStreakCard(secondIndex);
+        if (newVisibleCards.length === 2) {
+          const [firstIndex, secondIndex] = newVisibleCards;
+          if (cards[firstIndex] === cards[secondIndex]) {
+            setMatchedCards(prev => [...prev, firstIndex, secondIndex]);
+            setDiscoveredEmojis(prev => new Set(prev).add(cards[firstIndex]));
+            const matchScore = MATCH_SCORE + consecutiveMatches * CONSECUTIVE_MATCH_BONUS;
+            setScore(prev => prev + matchScore);
+            setConsecutiveMatches(prev => prev + 1);
+            setStreakCard(secondIndex);
 
-          if (consecutiveMatches > 0) {
-            SoundManager?.playStreak();
+            if (consecutiveMatches > 0) {
+              SoundManager?.playStreak();
+            }
+
+            setTimeout(() => setStreakCard(null), 1000);
+            setVisibleCards([]);
+
+            if (matchedCards.length + 2 === CARDS_AMOUNT) {
+              const timeTaken = (Date.now() - gameStartTime) / 1000;
+              const timeBonus = Math.max(0, Math.floor((300 - timeTaken) * TIME_BONUS_FACTOR));
+              setScore(prevScore => prevScore + timeBonus);
+              setIsWon(true);
+              endGame();
+            }
+          } else {
+            setTimeout(() => setVisibleCards([]), 1000);
+            setConsecutiveMatches(0);
           }
-
-          setTimeout(() => setStreakCard(null), 1000);
-          setVisibleCards([]);
-
-          if (matchedCards.length + 2 === CARDS_AMOUNT) {
-            const timeTaken = (Date.now() - gameStartTime) / 1000;
-            const timeBonus = Math.max(0, Math.floor((300 - timeTaken) * TIME_BONUS_FACTOR));
-            setScore(prevScore => prevScore + timeBonus);
-            setIsWon(true);
-            endGame();
-          }
-        } else {
-          setTimeout(() => setVisibleCards([]), 1000);
-          setConsecutiveMatches(0);
         }
+      } catch (error) {
+        console.error('Error in handleCardClick:', error);
       }
     },
     [
@@ -179,7 +183,6 @@ const MemoryGame = () => {
       isGameActive,
       showAllCards,
       consecutiveMatches,
-      score,
       gameStartTime,
       endGame,
     ]
