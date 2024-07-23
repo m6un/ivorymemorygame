@@ -39,9 +39,6 @@ class SoundManager {
      * @type {boolean}
      */
     this.muted = false;
-
-    this.tickingSound = null;
-    this.tickingInterval = null;
   }
 
   /**
@@ -97,34 +94,6 @@ class SoundManager {
   }
   playMatch() {
     this.playSound('match');
-  }
-
-  playTickingLoop() {
-    if (this.muted) return;
-
-    this.tickingSound = this.loadSound('match');
-    this.tickingSound.volume = 0.5; // Adjust volume as needed
-
-    const playTicking = () => {
-      if (this.tickingSound) {
-        this.tickingSound.currentTime = 0;
-        this.tickingSound.play();
-      }
-    };
-
-    playTicking(); // Play immediately
-    this.tickingInterval = setInterval(playTicking, 2000); // Loop every 2 seconds
-  }
-
-  stopTickingLoop() {
-    if (this.tickingInterval) {
-      clearInterval(this.tickingInterval);
-      this.tickingInterval = null;
-    }
-    if (this.tickingSound) {
-      this.tickingSound.pause();
-      this.tickingSound = null;
-    }
   }
 }
 

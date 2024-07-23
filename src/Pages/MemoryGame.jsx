@@ -133,7 +133,6 @@ const MemoryGame = () => {
     SoundManager.toggleMute();
   }, []);
 
-  console.log({ timeLeft });
 
   /**
    * Handles card click events
@@ -237,7 +236,6 @@ const MemoryGame = () => {
     [showModal, score, highScore, startGame, discoveredEmojis]
   );
 
-  console.log({ isGameActive });
 
   return (
     <div className="flex flex-col items-center bg-memory-pattern justify-center min-h-screen text-primary">
